@@ -71,8 +71,67 @@ app.get("/", redirectLogin, (req, res) => {
 
   const { userId } = req.session;
 
-  res.sendfile(__dirname + "\\index.html");
+  pool.query("SELECT * FROM utilisateur WHERE id_user = " + userId, (err, resp) => {
+    if (err) {
+      console.log(date + "Error bdd -> " + err.stack)
+    }
+    else {
+      if (resp.rows[0]) {
+        res.locals.user = resp.rows[0];
+
+        const user = res.locals.user;
+
+        console.log(date + "User online -> '" + user.pseudo + "'");
+
+        pool.query("SELECT * FROM item WHERE id_user = " + user.id_user, (err, resp) => {
+          if (err) {
+            console.log(date + "Error bdd -> " + err.stack);
+          }
+          else {
+            if (resp.rows[0]) {
+              console.log(date + "Affichage des items linked à '" + user.pseudo + "'")
+              const itemsLinked = resp.rows;
+              res.render('index.ejs', { UserOnline: user, Items: itemsLinked });
+            }
+            else {
+              res.render('index.ejs', { UserOnline: user });
+            }
+          }
+        });
+      }
+    }
+  });
 });
+
+app.post("/", (req, res) => {
+  const { url } = req.body;
+
+  pool.query("SELECT MAX(id_item)+1 FROM item", (err, resp) => {
+    if (err) {
+      console.log(date + "Error bdd -> " + err.stack);
+    }
+    else {
+      if (resp.rows[0]) {
+        pool.query("INSERT INTO item(id_item, url) VALUES(" + resp.rows[0] + ", '" + url + "');", (err, respo) => {
+          if (err) {
+            console.log(date + "Error bdd -> " + err.stack)
+            // todo : en cas d'erreur le notifier au user avec un message et redirect la page au meme endroit
+          }
+          else {
+            console.log(date + "Ajout de l'item '" + resp.rows[0] + "' a la bdd")
+
+            console.log("lancement du script python pour scrapper")
+            var spawn = require("child_process").spawn;
+            var process = spawn("python", ["./main.py"]);
+
+            res.redirect("/");
+          }
+        })
+      }
+    }
+  })
+})
+
 
 const redirectHome = (req, res, next) => {
   if (req.session.userId) {
@@ -88,15 +147,9 @@ app.get("/login", redirectHome, (req, res) => {
   console.log(date + "Login page")
 
   res.sendfile(__dirname + "\\login.html");
-
-  // req.session.use;
 });
 
-app.get("/register", (req, res) => {
-  res.sendfile(__dirname + "\\register.html");
-});
-
-app.post("/login", redirectHome, (req, res) => {
+app.post("/login", (req, res) => {
   const { pseudo, password } = req.body;
 
   console.log(
@@ -135,7 +188,12 @@ app.post("/login", redirectHome, (req, res) => {
   }
 });
 
-app.post("/register", redirectHome, (req, res) => {
+
+app.get("/register", redirectLogin, (req, res) => {
+  res.sendfile(__dirname + "\\register.html");
+});
+
+app.post("/register", (req, res) => {
   const { firstName, lastName, pseudo, password, email } = req.body;
 
   if (firstName && lastName && pseudo && password && email) { // todo : VALIDATION des champs
@@ -188,12 +246,12 @@ app.post("/register", redirectHome, (req, res) => {
   }
 });
 
-app.post("/logout", redirectLogin, (req, res) => {
+app.post("/logout", (req, res) => {
   console.log(date + "Logout of userId '" + req.session.userId + "'");
 
   req.session.destroy(err => {
     if (err) {
-      console.log(date + err);
+      console.log(date + "Error of logout -> " + err);
       return res.redirect("/");
     }
     else {
@@ -204,7 +262,12 @@ app.post("/logout", redirectLogin, (req, res) => {
   });
 });
 
-/* On utilise les sessions */
+// En cas d'url incorrect on redirect a la page d'acceuil
+app.use(function (req, res, next) {
+  res.redirect('/');
+})
+
+// Lancement du serveur
 app.listen(PORT, () =>
   console.log(date + "Serveur is listening in http://localhost:" + PORT)
 );

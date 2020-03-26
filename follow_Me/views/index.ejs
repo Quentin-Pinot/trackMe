@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name=checkList"viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Index</title>
+</head>
+
+<body>
+  <h1>Bonjour <%= UserOnline.pseudo  %></h1>
+
+  <h2>Voici les items d'Amazon que vous trackez : </h2>
+  <ul>
+    <% Items.forEach(function(data, index)
+    { %>
+    <li><%= data.title %> </li>
+    <%}); %>
+  </ul>
+
+  <form method="post" action="/">
+    <p>
+      <label for="url_To_Track">Glisser l'url de l'item à tracker ! </label>
+      <input type="text" name="url_To_Track" id="url_To_Track" placeholder="url..." size="50" autofocus required />
+      <input type="submit" value="Tracker" />
+    </p>
+  </form>
+
+  <form method="post" action="/logout">
+    <input type="button" value="Logout" />
+  </form>
+</body>
+
+</html>

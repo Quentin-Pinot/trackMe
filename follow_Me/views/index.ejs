@@ -14,7 +14,13 @@
   <ul>
     <% Items.forEach(function(data, index)
     { %>
-    <li><%= data.title %> </li>
+    <li>
+      <p style="font-size: 20px"><%= data.title %>
+        <% if (data.prix[data.prix.length-1] < data.prix[data.prix.length-2]) { %><span
+          style="color: green"><%= data.prix[data.prix.length-1] %> &darr;</span><% } else { %><span style="color: red">
+          <%= data.prix[data.prix.length-1] %> &uarr;</span> <% } %>
+      </p>
+    </li>
     <%}); %>
   </ul>
 
@@ -27,7 +33,7 @@
   </form>
 
   <form method="post" action="/logout">
-    <input type="button" value="Logout" />
+    <button>Logout</button>
   </form>
 </body>
 

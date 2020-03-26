@@ -9,7 +9,7 @@ let date = `${d.getDay()}-${d.getMonth()}-${d.getYear()} ${d.getHours()}:${d.get
 
 const {
   PORT = 8080,
-  PGHOST = "localhost",
+  PGHOST = "127.0.0.1",
   PGUSER = "postgres",
   PGDATABASE = "followMe",
   PGPASSWORD = "admin",
@@ -104,29 +104,39 @@ app.get("/", redirectLogin, (req, res) => {
 });
 
 app.post("/", (req, res) => {
-  const { url } = req.body;
+  const { url_To_Track } = req.body;
 
-  pool.query("SELECT MAX(id_item)+1 FROM item", (err, resp) => {
+  pool.query("SELECT COUNT(id_item) FROM item", (err, resp) => {
     if (err) {
       console.log(date + "Error bdd -> " + err.stack);
     }
     else {
       if (resp.rows[0]) {
-        pool.query("INSERT INTO item(id_item, url) VALUES(" + resp.rows[0] + ", '" + url + "');", (err, respo) => {
-          if (err) {
-            console.log(date + "Error bdd -> " + err.stack)
-            // todo : en cas d'erreur le notifier au user avec un message et redirect la page au meme endroit
-          }
-          else {
-            console.log(date + "Ajout de l'item '" + resp.rows[0] + "' a la bdd")
+        const id_item = parseInt(Object.values(resp.rows[0])) + 1
 
-            console.log("lancement du script python pour scrapper")
-            var spawn = require("child_process").spawn;
-            var process = spawn("python", ["./main.py"]);
+        pool.query("INSERT INTO item(id_item, url, date_add, id_user)" +
+          "VALUES(" + id_item + ", '" + url_To_Track + "',  CURRENT_DATE, " + req.session.userId + ");", (err, respo) => {
+            if (err) {
+              console.log(date + "Error bdd -> " + err.stack)
+              // todo : en cas d'erreur le notifier au user avec un message et redirect la page au meme endroit
+            }
+            else {
+              console.log(date + "Ajout de l'item '" + id_item + "' a la bdd");
 
-            res.redirect("/");
-          }
-        })
+              console.log(date + "lancement du script python pour scrapper");
+              const { spawn } = require("child_process");
+              const child = spawn("python", ["./scrapper/main.py ", req.session.userId, id_item]);
+
+              child.stdout.on('data', (data) => {
+                console.log(date + data.toString())
+              });
+
+              child.on('exit', () => {
+                console.log(date + "Fin du script python")
+                res.redirect("/")
+              });
+            }
+          })
       }
     }
   })

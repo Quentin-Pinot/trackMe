@@ -18,15 +18,15 @@ class Scrapeur:
 
         soup = BeautifulSoup(page.content, 'html.parser')
 
-        self.title = self.title_ascii(soup.find(
-            id="productTitle").get_text().strip())
+        self.title = soup.find(
+            id="productTitle").get_text().strip().replace("'", "''")
 
         priceString = soup.find(id="priceblock_ourprice").get_text()
         priceSplit = priceString.split()
         priceJoin = ''.join(priceSplit)
         findVirgule = priceJoin.find(",")
 
-        self.price = float(priceJoin[0:findVirgule])
+        self.price = int(priceJoin[0:findVirgule])
 
     def title_ascii(self, title):
         accent = ['é', 'è', 'ê', 'à', 'ù', 'û', 'ç', 'ô', 'î', 'ï', 'â']

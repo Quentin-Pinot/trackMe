@@ -8,20 +8,23 @@
 </head>
 
 <body>
-  <h1>Bonjour <%= UserOnline.pseudo  %></h1>
-
+  <h1>Bonjour <%= UserOnline.pseudo %></h1>
+  
   <h2>Voici les items d'Amazon que vous trackez : </h2>
   <ul>
-    <% Items.forEach(function(data, index)
-    { %>
-    <li>
-      <p style="font-size: 20px"><%= data.title %>
-        <% if (data.prix[data.prix.length-1] < data.prix[data.prix.length-2]) { %><span
-          style="color: green"><%= data.prix[data.prix.length-1] %> &darr;</span><% } else { %><span style="color: red">
-          <%= data.prix[data.prix.length-1] %> &uarr;</span> <% } %>
-      </p>
-    </li>
-    <%}); %>
+    <% if (Items)
+    {
+      Items.forEach(function(data, index)
+      { %><li style="font-size: 20px"> <%= data.title %> → <%
+        if (data.prix.length == 1) 
+        { %><a href="<%= data.url %>"><span><%= data.prix[data.prix.length-1] %> €</span></a><% } 
+        else if (data.prix[data.prix.length-1] < data.prix[data.prix.length-2])
+        { %><a href="<%= data.url %>"><span style="color: green"><%= data.prix[data.prix.length-1] %>€ &darr;</span></a><% } 
+        else 
+        { %><a href="<%= data.url %>"><span style="color: red"><%= data.prix[data.prix.length-1] %>€ &uarr;</span></a><% }
+        %></li><%
+      });
+    }%>
   </ul>
 
   <form method="post" action="/">
@@ -36,5 +39,4 @@
     <button>Logout</button>
   </form>
 </body>
-
 </html>

@@ -21,19 +21,12 @@ class Scrapeur:
         self.title = soup.find(
             id="productTitle").get_text().strip().replace("'", "''")
 
-        priceString = soup.find(id="priceblock_ourprice").get_text()
-        priceSplit = priceString.split()
-        priceJoin = ''.join(priceSplit)
+        if(soup.find(id="priceblock_ourprice") != None):
+            priceString = soup.find(id="priceblock_ourprice").get_text().split()
+        elif (soup.find(id="priceblock_saleprice") != None):
+            priceString = soup.find(id="priceblock_saleprice").get_text().split()
+        
+        priceJoin = ''.join(priceString)
         findVirgule = priceJoin.find(",")
 
         self.price = int(priceJoin[0:findVirgule])
-
-    def title_ascii(self, title):
-        accent = ['é', 'è', 'ê', 'à', 'ù', 'û', 'ç', 'ô', 'î', 'ï', 'â']
-        sans_accent = ['e', 'e', 'e', 'a',
-                            'u', 'u', 'c', 'o', 'i', 'i', 'a']
-
-        for c, s in zip(accent, sans_accent):
-            title = title.replace(c, s)
-
-        return title

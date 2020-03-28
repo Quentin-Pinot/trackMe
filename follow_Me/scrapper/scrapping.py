@@ -2,7 +2,6 @@ import sys
 import psycopg2
 from Scrapeur import Scrapeur
 from Item import Item
-from Mail import Mail
 
 try:
     idUser = sys.argv[1]
@@ -15,7 +14,7 @@ try:
     print('Connecting to the PostgreSQL database...')
     sys.stdout.flush()
 
-    conn = psycopg2.connect(host="127.0.0.1", database="followMe",
+    conn = psycopg2.connect(host="localhost", database="followMe",
                             user="postgres", password="admin", port="4321")
     conn.autocommit = True
     cur = conn.cursor()
@@ -33,7 +32,7 @@ try:
     url = cur.fetchall()[0][0]
 
     print("Item a scrapper -> '" +
-          idItem)
+          idItem + "'")
     sys.stdout.flush()
 
     scraping = Scrapeur(url)

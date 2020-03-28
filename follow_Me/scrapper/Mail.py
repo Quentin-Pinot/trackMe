@@ -1,30 +1,48 @@
+# coding: utf-8
+
+import smtplib
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+
 class Mail:
 
     def __init__(self, mailTo):
-        self.mailTo = mailTo
+        self.msg = MIMEMultipart()
         self.mailFrom = "followmebotbigc@gmail.com"
+        self.mailTo = mailTo
+        self.msg['From'] = self.mailFrom
+        self.msg['To'] = self.mailTo
         self.mailServeur = "smtp.gmail.com"
         self.portServeur = 587
-        self.mdpFrom = "aqezfjnvlscigdkz"
+        self.mdpFrom = "ghfgzotvtjdpumhj"
 
-    def send_mail(self, title, price_Alert, url):
-        serveur = smtplib.SMTP(mailServeur, portServeur)
+    def send_mail(self, title, price_Old, price_Current, url):
+        print("Connecting by ttls to SMTP server")
+        serveur = smtplib.SMTP(self.mailServeur, self.portServeur)
         serveur.ehlo()
         serveur.starttls()
         serveur.ehlo()
 
-        serveur.login(mailFrom, mdpFrom)
+        print("Connected to the server")
+        serveur.login(self.mailFrom, self.mdpFrom)
 
-        subject = title + ' a atteint le prix voulu : ' + \
-            str(price_Alert) + ' euros'
-        body = 'Voici le lien amazon : ' + str(url)
+        print("Building the message")
+        self.msg['Subject'] = 'Un item a baissé de prix de ' + \
+            str(price_Old) + ' à ' + str(price_Current) + '€'
+        message = title + ' a baissé de prix de ' + \
+            str(price_Old) + ' à ' + str(price_Current) + '€'\
+                '\nVoici le lien amazon : ' + url
+        self.msg.attach(MIMEText(message))
 
-        msg = f"Subject: {subject}\n\n{body}"
+        mailTo = [ self.mailTo ] + [ self.mailFrom ]
 
+        print("Sending a mail to '" + self.mailTo + "' in progress...")
         serveur.sendmail(
             self.mailFrom,
-            str(self.mailTo),
-            msg
+            mailTo,
+            self.msg.as_string(),
         )
+
+        print("Mail sended !")
 
         serveur.quit()

@@ -8,8 +8,8 @@ let d = new Date();
 let date = `${d.getDay()}-${d.getMonth()}-${d.getYear()} ${d.getHours()}:${d.getMinutes()}:${d.getSeconds()}: `;
 
 const {
-  PORT = 8080,
-  PGHOST = "127.0.0.1",
+  PORT = 55555,
+  PGHOST = "localhost",
   PGUSER = "postgres",
   PGDATABASE = "followMe",
   PGPASSWORD = "admin",
@@ -83,18 +83,19 @@ app.get("/", redirectLogin, (req, res) => {
 
         console.log(date + "User online -> '" + user.pseudo + "'");
 
-        pool.query("SELECT * FROM item WHERE id_user = " + user.id_user, (err, resp) => {
+        pool.query("SELECT * FROM item WHERE id_user = " + user.id_user, (err, respo) => {
           if (err) {
             console.log(date + "Error bdd -> " + err.stack);
           }
           else {
-            if (resp.rows[0]) {
+            if (respo.rows[0]) {
               console.log(date + "Affichage des items linked à '" + user.pseudo + "'")
-              const itemsLinked = resp.rows;
+              const itemsLinked = respo.rows;
               res.render('index.ejs', { UserOnline: user, Items: itemsLinked });
             }
             else {
-              res.render('index.ejs', { UserOnline: user });
+              console.log(date + "Pas d'items linked")
+              res.render('index.ejs', { UserOnline: user, Items: undefined });
             }
           }
         });
@@ -125,7 +126,7 @@ app.post("/", (req, res) => {
 
               console.log(date + "lancement du script python pour scrapper");
               const { spawn } = require("child_process");
-              const child = spawn("python", ["./scrapper/main.py ", req.session.userId, id_item]);
+              const child = spawn("python", ["./scrapper/scrapping.py ", req.session.userId, id_item]);
 
               child.stdout.on('data', (data) => {
                 console.log(date + data.toString())
@@ -163,7 +164,7 @@ app.post("/login", (req, res) => {
   const { pseudo, password } = req.body;
 
   console.log(
-    date + "Tentative de connection de '" + pseudo + "' avec un mdp '" + password + "'"
+    date + "Tentative de connection de '" + pseudo + "' avec ce mdp '" + password + "'"
   );
 
   if (pseudo && password) {
@@ -199,7 +200,7 @@ app.post("/login", (req, res) => {
 });
 
 
-app.get("/register", redirectLogin, (req, res) => {
+app.get("/register", redirectHome, (req, res) => {
   res.sendfile(__dirname + "\\register.html");
 });
 
@@ -225,7 +226,7 @@ app.post("/register", (req, res) => {
             }
           }
           else {
-            pool.query("SELECT MAX(id_user)+1 FROM utilisateur",
+            pool.query("SELECT COUNT(id_user)+1 FROM utilisateur",
               (err, respo) => {
                 if (err) {
                   console.log(date + "Error bdd -> ");

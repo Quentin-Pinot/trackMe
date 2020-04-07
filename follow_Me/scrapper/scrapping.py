@@ -15,7 +15,7 @@ try:
     sys.stdout.flush()
 
     conn = psycopg2.connect(host="localhost", database="followMe",
-                            user="postgres", password="admin", port="4321")
+                            user="postgres", password="admin", port="5432")
     conn.autocommit = True
     cur = conn.cursor()
 

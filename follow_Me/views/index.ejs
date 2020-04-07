@@ -14,15 +14,20 @@
   <ul>
     <% if (Items)
     {
-      Items.forEach(function(data, index)
-      { %><li style="font-size: 20px"> <%= data.title %> → <%
-        if (data.prix.length == 1) 
-        { %><a href="<%= data.url %>"><span><%= data.prix[data.prix.length-1] %> €</span></a><% } 
-        else if (data.prix[data.prix.length-1] < data.prix[data.prix.length-2])
-        { %><a href="<%= data.url %>"><span style="color: green"><%= data.prix[data.prix.length-1] %>€ &darr;</span></a><% } 
-        else 
-        { %><a href="<%= data.url %>"><span style="color: red"><%= data.prix[data.prix.length-1] %>€ &uarr;</span></a><% }
-        %></li><%
+      Items.forEach(function(data)
+      { 
+        if (data.title != null)
+        { %><li style="font-size: 20px"><%
+          if (data.prix.length == 1) 
+          { %><span><a href="/delete/<%= data.id_item %>">✘</a> - <%= data.title %> → <a href="<%= data.url %>" onclick="window.open(this.href); return false;"><%= data.prix[data.prix.length-1] %> €</span></a><% } 
+          else if (data.prix[data.prix.length-1] < data.prix[data.prix.length-2])
+          { %><a href="/delete/<%= data.id_item %>">✘</a> - <%= data.title %> → <a href="<%= data.url %>" onclick="window.open(this.href); return false;"><span style="color: green"><%= data.prix[data.prix.length-1] %>€ &darr;</span></a><% } 
+          else if (data.prix[data.prix.length-1] > data.prix[data.prix.length-2])
+          { %><a href="/delete/<%= data.id_item %>">✘</a> - <%= data.title %> → <a href="<%= data.url %>" onclick="window.open(this.href); return false;"><span style="color: red"><%= data.prix[data.prix.length-1] %>€ &uarr;</span></a><% }
+          %></%>
+            </li>
+          <%
+        }
       });
     }%>
   </ul>

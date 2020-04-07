@@ -13,7 +13,7 @@ const {
   PGUSER = "postgres",
   PGDATABASE = "followMe",
   PGPASSWORD = "admin",
-  PGPORT = "4321",
+  PGPORT = "5432",
   NODE_ENV = "development",
   SESS_NAME = "sid",
   SESS_SECRET = "raboule_le_fric_amazon",
@@ -112,7 +112,7 @@ app.post("/", (req, res) => {
       console.log(date + "Error bdd -> " + err.stack);
     }
     else {
-      if (resp.rows[0]) {
+      if (resp.rows[0] == 0) {
         const id_item = parseInt(Object.values(resp.rows[0])) + 1
 
         pool.query("INSERT INTO item(id_item, url, date_add, id_user)" +
@@ -139,8 +139,60 @@ app.post("/", (req, res) => {
             }
           })
       }
+      else
+      {
+        pool.query("SELECT MAX(id_item) FROM item", (err, respon) => {
+          if (err) {
+            console.log(date + "Error bdd -> " + err.stack);
+          }
+          else
+          {
+            const id_item = parseInt(Object.values(respon.rows[0])) + 1
+
+            pool.query("INSERT INTO item(id_item, url, date_add, id_user)" +
+              "VALUES(" + id_item + ", '" + url_To_Track + "',  CURRENT_DATE, " + req.session.userId + ");", (err, respons) => {
+                if (err) {
+                  console.log(date + "Error bdd -> " + err.stack)
+                  // todo : en cas d'erreur le notifier au user avec un message et redirect la page au meme endroit
+                }
+                else {
+                  console.log(date + "Ajout de l'item '" + id_item + "' a la bdd");
+
+                  console.log(date + "lancement du script python pour scrapper");
+                  const { spawn } = require("child_process");
+                  const child = spawn("python", ["./scrapper/scrapping.py ", req.session.userId, id_item]);
+
+                  child.stdout.on('data', (data) => {
+                    console.log(date + data.toString())
+                  });
+
+                  child.on('exit', () => {
+                    console.log(date + "Fin du script python")
+                    res.redirect("/")
+                  });
+                }
+              });
+          }
+        });
+      }
     }
   })
+})
+
+.get('/delete/:id', function(req, res) {
+  if (req.params.id != '') {
+      pool.query("UPDATE item "+
+                  "SET deletedby = " + req.session.userId + ", " +
+                  "id_user = 0 " +
+                  "WHERE id_item = " + req.params.id, (err, resp) => {
+                    if(err)
+                    {
+                      console.log(date + "Error of bdd delete a item -> ")
+                      console.log(date + err)
+                    }
+                  });
+  }
+  res.redirect("/");
 })
 
 

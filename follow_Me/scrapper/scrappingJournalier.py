@@ -13,7 +13,7 @@ try:
 
     try:
         conn = psycopg2.connect(host="localhost", database="followMe",
-                                user="postgres", password="admin", port="4321")
+                                user="postgres", password="admin", port="5432")
         conn.autocommit = True
         cur = conn.cursor()
     except Exception as error:
@@ -39,14 +39,16 @@ try:
         try:
             scraping = Scrapeur(item[3])
             scraping.check_Info()
+
+            print("The scrapping is completed for the item '" + str(item[0]) + "'")
+            print("Old price : " + str(item[2][len(item[2])-1]) + "\nNew price : "+ str(scraping.price))
         except Exception as error:
             print("Error in the scrapper ->")
             print(error)
         
-        print("The scrapping is completed for the item '" + str(item[0]) + "'")
-        print("Old price : " + str(item[2][len(item[2])-1]) + "\nNew price : "+ str(scraping.price))
 
-        if (item[2][len(item[2])-1] > scraping.price):
+
+        if (float(scraping.price) < float(item[2][len(item[2])-1])):
             mail = Mail(item[5])
             mail.send_mail(item[4], str(item[2][len(item[2])-1]), str(scraping.price), item[3])
 
@@ -54,15 +56,16 @@ try:
 
             query = ("UPDATE item " +
              "SET prix = array_append(prix, " + str(scraping.price) + ")" +
+              ", date_up = CURRENT_DATE" +
              " WHERE id_item = " + str(item[0]))
             cur.execute(query)
 
-        elif(item[2][len(item[2])-1] < scraping.price):
+        elif(float(scraping.price) > float(item[2][len(item[2])-1])):
             print("Updating of the price for " + str(item[0]) + " in the database...")
             
             query = ("UPDATE item " +
              "SET prix = array_append(prix, " + str(scraping.price) + ")" +
-             ", date_Updated = CURRENT_DATE" + 
+             ", date_up = CURRENT_DATE" + 
              " WHERE id_item = " + str(item[0]))
             cur.execute(query)
 

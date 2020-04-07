@@ -212,7 +212,7 @@ app.get("/login", redirectHome, (req, res) => {
   res.sendfile(__dirname + "\\login.html");
 });
 
-app.post("/login", (req, res) => {
+app.post("/login", redirectHome, (req, res) => {
   const { pseudo, password } = req.body;
 
   console.log(

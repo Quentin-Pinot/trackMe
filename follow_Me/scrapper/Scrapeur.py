@@ -14,7 +14,7 @@ class Scrapeur:
 
     def check_Info(self):
         page = requests.get(self.url, headers=self.headers)
-        
+
         soup = BeautifulSoup(page.content, 'html.parser')
 
         # How to get the title
@@ -35,10 +35,15 @@ class Scrapeur:
         elif (soup.find("h1", {"class": "fn"}) != None):
             self.title = soup.find("h1", {"class": "fn"}).get_text().strip().replace("'", "''")
 
+        # Fnac
+        elif (soup.find_all("h1", {"class": "f-productHeader-Title"}) != None):
+            #self.title = soup.find_all("h1", {"class": "f-productHeader-Title"})[0].get_text()
+            self.title = soup.find_all("h1", {"class": "f-productHeader-Title"})[0].get_text().strip()
+
         # Rue du Commerce
         elif (soup.find_all("div", {"class": "titreDescription"}) != None):
             self.title = soup.find_all("div", {"class": "titreDescription"})[0].get_text()
-            print(self.title)
+            
 
 
         # How to get the price 
@@ -84,6 +89,12 @@ class Scrapeur:
             findVirgule = priceString.replace(",", ".").replace("€", "")
             self.price = float(findVirgule)
 
+         # Fnac
+        elif (soup.find("div", {"class": "f-priceBox"}) != None):
+            priceString = soup.find_all("div", {"class": "f-priceBox"})[0].get_text()
+            findVirgule = priceString.replace("€", ".")
+            self.price = float(findVirgule)
+        
         # Rue du Commerce
         elif (soup.find("div", {"class": "price-pricesup"}) != None):
             priceString = soup.find_all("div", {"class": "price-pricesup"})[0].get_text()

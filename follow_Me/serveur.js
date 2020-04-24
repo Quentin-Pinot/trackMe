@@ -16,7 +16,7 @@ const {
   PGPORT = "5432",
   NODE_ENV = "development",
   SESS_NAME = "sid",
-  SESS_SECRET = "raboule_le_fric_amazon",
+  SESS_SECRET = "raboule_le_fric",
   SESS_LIFETIME = 24 * 60 * 60 * 1000 // 24h
 } = process.env;
 

@@ -1,0 +1,64 @@
+INFO:root:Beginning of the script dayli scrapper
+INFO:root:Connecting to the PostgreSQL database...
+INFO:root:Connected to the PostgreSQL database
+INFO:root:Start the scrapping for each items
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (1): www.topachat.com:443
+DEBUG:urllib3.connectionpool:https://www.topachat.com:443 "GET /pages/detail2_cat_est_micro_puis_rubrique_est_w_acq_puis_ref_est_in10112213.html HTTP/1.1" 200 12578
+INFO:root:The scrapping is completed for the item '9'
+INFO:root:Old price : 149.99
+New price : 149.99
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (1): www.ldlc.com:443
+DEBUG:urllib3.connectionpool:https://www.ldlc.com:443 "GET /fiche/PB00281534.html HTTP/1.1" 200 None
+INFO:root:The scrapping is completed for the item '6'
+INFO:root:Old price : 164.95
+New price : 164.95
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (1): www.amazon.fr:443
+DEBUG:urllib3.connectionpool:https://www.amazon.fr:443 "GET /gp/product/B01LYL2BHG/ref=as_li_tl?ie=UTF8&camp=1642&creative=6746&creativeASIN=B01LYL2BHG&linkCode=as2&tag=quentinruel-21&linkId=5e2a16f0038e56d9a1a635b78dfb692d HTTP/1.1" 200 None
+WARNING:root:Error in the scrapper ->
+WARNING:root:list index out of range
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (1): www.ldlc.com:443
+DEBUG:urllib3.connectionpool:https://www.ldlc.com:443 "GET /fiche/PB00148757.html HTTP/1.1" 200 None
+INFO:root:The scrapping is completed for the item '7'
+INFO:root:Old price : 139.94
+New price : 139.94
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (1): www.rueducommerce.fr:443
+DEBUG:urllib3.connectionpool:https://www.rueducommerce.fr:443 "GET /produit/elgato-new-product-20180523121932-33391500/offre-91724421 HTTP/1.1" 200 None
+WARNING:root:Error in the scrapper ->
+WARNING:root:could not convert string to float: '\n                    173.56*Détails du prix renseigné par le vendeurPrix avant promo182,69.Promotion avec le code MP-SUMMER-5-9,13.Prix final (hors services et frais de port)173,56.Vous économisez 9,13. soit 5%'
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (1): www.amazon.fr:443
+DEBUG:urllib3.connectionpool:https://www.amazon.fr:443 "GET /Elgato-Stream-Deck-Contr%C3%B4leur-Personnalisables/dp/B06W2KLM3S/ref=sr_1_4?__mk_fr_FR=%C3%85M%C3%85%C5%BD%C3%95%C3%91&dchild=1&keywords=elgato&qid=1587478058&sr=8-4 HTTP/1.1" 200 None
+WARNING:root:Error in the scrapper ->
+WARNING:root:list index out of range
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (1): www.rueducommerce.fr:443
+DEBUG:urllib3.connectionpool:https://www.rueducommerce.fr:443 "GET /produit/elgato-new-product-20180523122327-33391502/offre-123274351 HTTP/1.1" 200 None
+INFO:root:The scrapping is completed for the item '11'
+INFO:root:Old price : 0.0
+New price : Épuisé
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (1): www.amazon.fr:443
+DEBUG:urllib3.connectionpool:https://www.amazon.fr:443 "GET /Apple-MWP22ZM-A-AirPods-Pro/dp/B07ZPML7NP/ref=sr_1_1_sspa?__mk_fr_FR=%C3%85M%C3%85%C5%BD%C3%95%C3%91&dchild=1&keywords=airpod&qid=1585415310&sr=8-1-spons&psc=1&spLa=ZW5jcnlwdGVkUXVhbGlmaWVyPUExQVlTQzNPQjJKT1JCJmVuY3J5cHRlZElkPUEwMDQ4OTE5OUgzSkpKNDlTOE9LJmVuY3J5cHRlZEFkSWQ9QTA0MTI2MTYzUFcxMjA0STRDRFRaJndpZGdldE5hbWU9c3BfYXRmJmFjdGlvbj1jbGlja1JlZGlyZWN0JmRvTm90TG9nQ2xpY2s9dHJ1ZQ== HTTP/1.1" 200 None
+WARNING:root:Error in the scrapper ->
+WARNING:root:list index out of range
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (1): www.amazon.fr:443
+DEBUG:urllib3.connectionpool:https://www.amazon.fr:443 "GET /Zowie-Camade-Dispositif-Gestion-Souris/dp/B01CKP4030/ref=sr_1_4?__mk_fr_FR=%C3%85M%C3%85%C5%BD%C3%95%C3%91&dchild=1&keywords=benq+cable&qid=1586113236&sr=8-4 HTTP/1.1" 200 None
+WARNING:root:Error in the scrapper ->
+WARNING:root:list index out of range
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (1): www.fnac.com:443
+DEBUG:urllib3.connectionpool:https://www.fnac.com:443 "GET /a13749611/Vitaa-Versus-CD-album HTTP/1.1" 200 31087
+INFO:root:The scrapping is completed for the item '20'
+INFO:root:Old price : 14.99
+New price : 14.99
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (1): www.topachat.com:443
+DEBUG:urllib3.connectionpool:https://www.topachat.com:443 "GET /pages/detail2_cat_est_micro_puis_rubrique_est_w_acq_puis_ref_est_in10112214.html HTTP/1.1" 200 12356
+INFO:root:The scrapping is completed for the item '10'
+INFO:root:Old price : 189.99
+New price : 189.99
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (1): jeux-video.fnac.com:443
+DEBUG:urllib3.connectionpool:https://jeux-video.fnac.com:443 "GET /a12500543/Animal-Crossing-New-Horizons-Nintendo-Switch-Jeu-Nintendo-Switch HTTP/1.1" 200 35171
+INFO:root:The scrapping is completed for the item '14'
+INFO:root:Old price : 46.99
+New price : 46.99
+DEBUG:urllib3.connectionpool:Starting new HTTPS connection (1): www.ldlc.com:443
+DEBUG:urllib3.connectionpool:https://www.ldlc.com:443 "GET /fiche/PB00254175.html HTTP/1.1" 200 None
+INFO:root:The scrapping is completed for the item '16'
+INFO:root:Old price : 69.95
+New price : 69.95
